@@ -35,9 +35,11 @@ No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
     doc.to_html
   end
 
-
   def analyze_page
     PageAnalyzer.new(sanitize_page).analyze
+    page = @driver.find_element(tag_name: 'body').text if page.nil?
+    puts "Page analysis or text content:\n\n #{page}\n\n"
+    page
   end
 
   def execute_action(action)
@@ -56,14 +58,13 @@ No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
     end
     
     page = analyze_page
-    puts "Page analysis:\n\n #{page}\n\n"
+
     loop do
       puts 'Please enter a command:'
       command = gets.chomp
       next if command.empty?
       if command == 'analyze page'
         page = analyze_page
-        puts "Page analysis:\n\n #{page}\n\n"
         next
       end
 
