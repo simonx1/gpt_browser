@@ -63,9 +63,12 @@ No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
       puts 'Please enter a command:'
       command = gets.chomp
       next if command.empty?
-      if command == 'analyze page'
+      if command.downcase == 'analyze page'
         page = analyze_page
         next
+      elsif command.downcase == 'exit'
+        @driver.quit
+        exit-program
       end
 
       action = @openai_gpt4.query(prompt: command.downcase, extra_context: page)
@@ -78,8 +81,6 @@ No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
         rescue Selenium::WebDriver::Error::NoSuchElementError, Selenium::WebDriver::Error::ElementNotInteractableError => e
           puts "Element not found: #{e}"
         end
-      elsif answer.downcase == 'exit'
-        exit
       end
     end
   end
