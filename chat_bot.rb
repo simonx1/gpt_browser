@@ -63,7 +63,7 @@ No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
     page = analyze_page
 
     loop do
-      puts 'Please enter a command:'
+      puts "Predefined commands: analyze page, manual mode, binding.pry, exit.\nPlease enter a command:"
       command = gets.chomp
       next if command.empty?
       if command.downcase == 'analyze page'
@@ -77,6 +77,9 @@ No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
         rescue Selenium::WebDriver::Error::NoSuchElementError, Selenium::WebDriver::Error::ElementNotInteractableError => e
           puts "Element not found: #{e}"
         end
+        next
+      elsif command.downcase == 'binding.pry'
+        binding.pry
         next
       elsif command.downcase == 'exit'
         @driver.quit
