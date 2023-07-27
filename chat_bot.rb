@@ -36,7 +36,7 @@ No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
   end
 
   def analyze_page
-    PageAnalyzer.new(sanitize_page).analyze
+    page = PageAnalyzer.new(sanitize_page).analyze
     page = @driver.find_element(tag_name: 'body').text if page.nil?
     puts "Page analysis or text content:\n\n #{page}\n\n"
     page
