@@ -20,7 +20,7 @@ class GptChatBot
     @messages = messages
   end
 
-  def gpt(temperature: 0.2, model: "gpt-4")
+  def gpt(temperature: 0, model: "gpt-4")
     t = Time.now
 
     parameters = {
