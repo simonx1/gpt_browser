@@ -48,6 +48,7 @@ No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
   def run
     puts 'Please enter the website URL:'
     url = gets.chomp
+    url = "https://#{url}" unless url.start_with?('http://', 'https://')
     begin
       navigate_to(url.downcase)
     rescue Selenium::WebDriver::Error::InvalidArgumentError => e
@@ -59,6 +60,13 @@ No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
     loop do
       puts 'Please enter a command:'
       command = gets.chomp
+      next if command.empty?
+      if command == 'analyze page'
+        page = analyze_page
+        puts "Page analysis:\n\n #{page}\n\n"
+        next
+      end
+
       action = @openai_gpt4.query(prompt: command.downcase, extra_context: page)
       puts "Generated code:\n*******\n#{action}\n*******"
       puts 'Do you want to execute this code? (yes/no)'
@@ -66,11 +74,9 @@ No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
       if answer.downcase == 'yes'
         begin
           eval(action)
-        rescue Selenium::WebDriver::Error::NoSuchElementError => e
+        rescue Selenium::WebDriver::Error::NoSuchElementError, Selenium::WebDriver::Error::ElementNotInteractableError => e
           puts "Element not found: #{e}"
         end
-      elsif answer.downcase == 'analyze page'
-        page = analyze_page
       elsif answer.downcase == 'exit'
         exit
       end
