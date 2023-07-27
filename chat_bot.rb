@@ -29,6 +29,9 @@ No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
     doc.xpath('//script').remove
     doc.xpath('//style').remove
     doc.xpath('//svg').remove
+    doc.xpath('//head').remove
+    doc.xpath('//iframe').remove
+    doc.xpath('//link').remove
 
     # Get the HTML content without script and style tags
     puts "\n\n\n #{doc.to_html}\n\n"
@@ -66,12 +69,21 @@ No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
       if command.downcase == 'analyze page'
         page = analyze_page
         next
+      elsif command.downcase == 'manual mode'
+        puts 'Please enter a ruby code:'
+        command = gets.chomp
+        begin
+          eval(command)
+        rescue Selenium::WebDriver::Error::NoSuchElementError, Selenium::WebDriver::Error::ElementNotInteractableError => e
+          puts "Element not found: #{e}"
+        end
+        next
       elsif command.downcase == 'exit'
         @driver.quit
         exit-program
       end
 
-      action = @openai_gpt4.query(prompt: command.downcase, extra_context: page)
+      action = @openai_gpt4.query(prompt: command, extra_context: page)
       puts "Generated code:\n*******\n#{action}\n*******"
       puts 'Do you want to execute this code? (yes/no)'
       answer = gets.chomp
