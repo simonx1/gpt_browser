@@ -2,3 +2,5 @@
 .history.txt
 .ruby-lsp
 logfile.log
+.tool-versions
+
