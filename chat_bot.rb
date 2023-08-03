@@ -82,20 +82,20 @@ No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
     url = "https://#{url}" unless url.start_with?('http://', 'https://')
     begin
       navigate_to(url.downcase)
-    rescue Selenium::WebDriver::Error::InvalidArgumentError => e
+    rescue Selenium::WebDriver::Error::InvalidArgumentError, Selenium::WebDriver::Error::UnknownError => e
       exit("Invalid URL: #{url}")
     end
     
     page = analyze_page
 
     loop do
-      puts "Predefined commands: analyze page, manual mode, binding.pry, exit.\nPlease enter a command:"
+      puts "Predefined commands: analyze page (ap), manual mode (mm), binding.pry (pry), exit (e).\nPlease enter a command:"
       command = gets.chomp
       next if command.empty?
-      if command.downcase == 'analyze page'
+      if command.downcase == 'analyze page' || command.downcase == 'ap'
         page = analyze_page
         next
-      elsif command.downcase == 'manual mode'
+      elsif command.downcase == 'manual mode' || command.downcase == 'mm'
         puts 'Please enter a ruby code:'
         command = gets.chomp
         begin
@@ -104,19 +104,19 @@ No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
           puts "Element not found: #{e}"
         end
         next
-      elsif command.downcase == 'binding.pry'
+      elsif command.downcase == 'binding.pry' || command.downcase == 'pry'
         binding.pry
         next
-      elsif command.downcase == 'exit'
+      elsif command.downcase == 'exit' || command.downcase == 'e'
         driver.quit
         exit-program
       end
 
       action = @openai_gpt4.query(prompt: command, extra_context: page)
       puts "Generated code:\n*******\n#{action}\n*******"
-      puts 'Do you want to execute this code? (yes/no)'
+      puts 'Do you want to execute this code? (y)es/no'
       answer = gets.chomp
-      if answer.downcase == 'yes'
+      if answer.downcase == 'yes' || answer.downcase == 'y'
         begin
           eval(action)
         rescue Selenium::WebDriver::Error::NoSuchElementError, Selenium::WebDriver::Error::ElementNotInteractableError => e
