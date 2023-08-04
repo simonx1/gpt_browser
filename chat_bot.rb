@@ -87,20 +87,24 @@ No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
     end
     
     page = analyze_page
+    error_message = ""
+    action = ""
 
     loop do
-      puts "Predefined commands: analyze page (ap), manual mode (mm), binding.pry (pry), exit (e).\nPlease enter a command:"
+      puts "Predefined commands: analyze page (ap), manual mode (mm), binding.pry (pry), fix code (fc), exit (e).\nPlease enter a command:"
       command = gets.chomp
       next if command.empty?
       if command.downcase == 'analyze page' || command.downcase == 'ap'
         page = analyze_page
         next
+      elsif command.downcase == 'fix code' || command.downcase == 'fc'
+        command = "This code:\n#{action}\n\nis causing this error:\n#{error_message}\n\nPlease try to find this element in a different way. No other text, just provide Ruby code."
       elsif command.downcase == 'manual mode' || command.downcase == 'mm'
         puts 'Please enter a ruby code:'
         command = gets.chomp
         begin
           eval(command)
-        rescue Selenium::WebDriver::Error::NoSuchElementError, Selenium::WebDriver::Error::ElementNotInteractableError => e
+        rescue Selenium::WebDriver::Error::NoSuchElementError, Selenium::WebDriver::Error::ElementNotInteractableError, Selenium::WebDriver::Error::UnknownError => e
           puts "Element not found: #{e}"
         end
         next
@@ -119,7 +123,9 @@ No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
       if answer.downcase == 'yes' || answer.downcase == 'y'
         begin
           eval(action)
+          error_message = ""
         rescue Selenium::WebDriver::Error::NoSuchElementError, Selenium::WebDriver::Error::ElementNotInteractableError => e
+          error_message = "Element not found: #{e}"
           puts "Element not found: #{e}"
         end
       end

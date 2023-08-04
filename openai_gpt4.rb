@@ -10,10 +10,10 @@ class OpenAIGPT4
   end
 
   def query(prompt:, extra_context: nil)
-    prompt = "#{extra_context}\n\n#{prompt}" if extra_context
+    chatbot.messages << { role: "user", content: "Page content\n\n#{extra_context}\n\n" } if extra_context
     chatbot.messages << { role: "user", content: prompt }
+
     model = extra_context.nil? ? "gpt-3.5-turbo-16k" : "gpt-4"
-    chatbot.gpt(temperature: 0.7, model: model)
     response, usage = chatbot.gpt(temperature: 0.7, model: model)
     chatbot.messages << { role: "assistant", content: response } if response
     response

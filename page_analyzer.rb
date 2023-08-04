@@ -6,7 +6,7 @@ class PageAnalyzer
   end
 
   def analyze
-      qq = <<-QUERY
+      qq = <<~QUERY
       Please analyze the content of this HTML page and create a comprehensive list of HTML elements, including their corresponding CSS selectors and a concise one-sentence summary describing the purpose of each element. Use the "id" attribute as the selector if it is present. An example pair might look like this: #gksS1d: "Login link". Avoid including any extra text or commentary beyond this format.
       QUERY
 
