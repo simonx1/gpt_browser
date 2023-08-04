@@ -32,7 +32,7 @@ No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
     html_doc  = remove_non_actionable_elements(html_doc) if strict == true
 
     # Get the HTML content without script and style tags
-    puts "\n\n\n #{html_doc.to_html}\n\n"
+    # puts "\n\n\n #{html_doc.to_html}\n\n"
     html_doc.to_html
   end
 
@@ -65,6 +65,7 @@ No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
   end
 
   def analyze_page
+    puts "Analyzing page...\n\n"
     page = PageAnalyzer.new(sanitize_page).analyze
     page = driver.find_element(tag_name: 'body').text if page.nil?
     puts "Page analysis or text content:\n\n #{page}\n\n"
@@ -104,7 +105,14 @@ No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
         command = gets.chomp
         begin
           eval(command)
-        rescue Selenium::WebDriver::Error::NoSuchElementError, Selenium::WebDriver::Error::ElementNotInteractableError, Selenium::WebDriver::Error::UnknownError => e
+        rescue Selenium::WebDriver::Error::NoSuchElementError, 
+          Selenium::WebDriver::Error::ElementNotInteractableError, 
+          Selenium::WebDriver::Error::ElementClickInterceptedError,
+          Selenium::WebDriver::Error::UnknownError,
+          Selenium::WebDriver::Error::InvalidSelectorError,
+          Selenium::WebDriver::Error::InvalidElementStateError,
+          ArgumentError,
+          NoMethodError => e
           puts "Element not found: #{e}"
         end
         next
@@ -124,7 +132,13 @@ No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
         begin
           eval(action)
           error_message = ""
-        rescue Selenium::WebDriver::Error::NoSuchElementError, Selenium::WebDriver::Error::ElementNotInteractableError => e
+        rescue Selenium::WebDriver::Error::NoSuchElementError, 
+          Selenium::WebDriver::Error::ElementNotInteractableError, 
+          Selenium::WebDriver::Error::ElementClickInterceptedError,
+          Selenium::WebDriver::Error::UnknownError,
+          Selenium::WebDriver::Error::InvalidSelectorError,
+          Selenium::WebDriver::Error::InvalidElementStateError,
+          ArgumentError => e
           error_message = "Element not found: #{e}"
           puts "Element not found: #{e}"
         end
