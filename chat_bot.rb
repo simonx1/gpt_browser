@@ -126,6 +126,7 @@ No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
       end
 
       action = @openai_gpt4.query(prompt: command, extra_context: page)
+      page = nil
       puts "Generated code:\n*******\n#{action}\n*******"
       puts 'Do you want to execute this code? (y)es/no'
       answer = gets.chomp
