@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 require 'selenium-webdriver'
 require 'nokogiri'
 require_relative 'page_analyzer'
@@ -11,11 +13,16 @@ class ChatBot
 
   def initialize
     @driver = Selenium::WebDriver.for :chrome
-    @openai_gpt4 = OpenAIGPT4.new("You are a Ruby developer. Please write Ruby code that uses Selenium gem do \ 
-execute given command based on the HTML page content. Focus only on the action from prompt, do not generate code for all elements. \
-Do not generate selenium connection boilerplate code. \
-No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
+    init_gpt
   end
+
+  def init_gpt
+    @openai_gpt4 = OpenAIGPT4.new("You are a Ruby developer. Please write Ruby code that uses Selenium gem do \ 
+      execute given command based on the HTML page content. Focus only on the action from prompt, do not generate code for all elements. \
+      Do not generate selenium connection boilerplate code. \
+      No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
+  end
+
 
   def navigate_to(url)
     driver.navigate.to url
@@ -97,6 +104,7 @@ No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
       next if command.empty?
       if command.downcase == 'analyze page' || command.downcase == 'ap'
         page = analyze_page
+        init_gpt
         next
       elsif command.downcase == 'fix code' || command.downcase == 'fc'
         command = "This code:\n#{action}\n\nis causing this error:\n#{error_message}\n\nPlease try to find this element in a different way. No other text, just provide Ruby code."
