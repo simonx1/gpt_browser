@@ -112,6 +112,7 @@ No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
           Selenium::WebDriver::Error::InvalidSelectorError,
           Selenium::WebDriver::Error::InvalidElementStateError,
           ArgumentError,
+          SyntaxError,
           NoMethodError => e
           puts "Element not found: #{e}"
         end
@@ -138,7 +139,9 @@ No other text, just Ruby code. @driver is a Selenium::WebDriver instance.")
           Selenium::WebDriver::Error::UnknownError,
           Selenium::WebDriver::Error::InvalidSelectorError,
           Selenium::WebDriver::Error::InvalidElementStateError,
-          ArgumentError => e
+          ArgumentError,
+          NoMethodError,
+          SyntaxError => e
           error_message = "Element not found: #{e}"
           puts "Element not found: #{e}"
         end
