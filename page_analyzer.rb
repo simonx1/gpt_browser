@@ -7,7 +7,7 @@ class PageAnalyzer
 
   def analyze
       qq = <<~QUERY
-      Please analyze the content of this HTML page and create a comprehensive list of HTML elements, including their tag name corresponding CSS selectors and a concise one-sentence summary describing the purpose of each element based on the type of element and text inside it. Use the "id" attribute as the selector if it is present. An example pair might look like this: button#gksS1d: "A sign in form submit button". Avoid including any extra text or commentary beyond this format.
+      Examine the HTML code provided and list the HTML elements used. Include the tag name, CSS selectors (using the "id" attribute if available), and a brief summary of the purpose of each element. The information should be presented in pairs, like this: button#gksS1d: "A sign in form submit button". Do not include any additional text or commentary.
       QUERY
 
     OpenAIGPT4.new(qq).query(prompt: @page_content)
